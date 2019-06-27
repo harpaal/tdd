@@ -28,6 +28,7 @@ import com.hpst.tdd.service.CarService;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(CarController.class)
+
 public class CarControllerTest {
 
 	@Autowired
@@ -39,7 +40,7 @@ public class CarControllerTest {
 	@Test
 	public void getCars_returnsCarDetails() throws Exception {
 		//given(for a given method call on mock object) // it should return a new Car 
-		given(carService.getCarDetails(anyString())).willReturn(new Car("farari","hybrid"));
+		given(carService.getCarDetails(anyString())).willReturn(new Car(1,"farari","hybrid"));
 		mockMvc.perform(MockMvcRequestBuilders.get("/cars/farari"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("name").value("farari"))
