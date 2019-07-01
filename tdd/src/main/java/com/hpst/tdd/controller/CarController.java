@@ -29,8 +29,7 @@ public class CarController {
 	@Autowired
 	CarService carService;
 	
-	@GetMapping("/cars/{name}")
-	
+	@GetMapping(value ="/cars/{name}" ,produces = "application/json")
 	public Car getCarDetails(@PathVariable String name) {
 		log.info("Inside Controller , name is "+name);
 		return carService.getCarDetails(name);

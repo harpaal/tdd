@@ -5,6 +5,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.hpst.tdd.Car;
+import com.hpst.tdd.exception.DuplicateCarException;
 import com.hpst.tdd.repository.CarRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,10 @@ public class CarService {
 	public Car getCarDetails(String name) {
 		log.info("<--------@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@---Getting "+name + "  details from DataBase---------->");
 		return carRepository.findByName(name);
+	}
+
+	public Car create(Car createCar) throws DuplicateCarException{
+		return null;
 	}
 
 }
