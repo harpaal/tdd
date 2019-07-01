@@ -66,6 +66,7 @@ class DefaultCarServiceIT {
   }
 
   private void recreateIndex() {
+	  
       if (template.indexExists(Car.class)) {
           template.deleteIndex(Car.class);
           template.createIndex(Car.class);
