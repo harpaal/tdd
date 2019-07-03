@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import com.hpst.tdd.Car;
 import com.hpst.tdd.exception.DuplicateCarException;
 import com.hpst.tdd.repository.CarRepository;
-import com.hpst.tdd.repository.es.CarElasticSearchRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,8 +17,8 @@ public class CarService {
 	@Autowired
 	CarRepository carRepository;
 	
-	@Autowired
-	CarElasticSearchRepository carEsRepository;
+//	@Autowired
+//	CarElasticSearchRepository carEsRepository;
 	
 	@Cacheable("cars")
 	public Car getCarDetails(String name) {
@@ -28,7 +27,8 @@ public class CarService {
 	}
 
 	public Car create(Car car) throws DuplicateCarException{
-		return carEsRepository.save(car);
+		//return carEsRepository.save(car);
+		return null;
 	}
 
 }
