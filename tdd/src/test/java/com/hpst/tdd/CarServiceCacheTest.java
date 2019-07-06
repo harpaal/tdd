@@ -8,26 +8,48 @@ import static org.mockito.Mockito.verify;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.autoconfigure.core.AutoConfigureCache;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
+import com.hpst.tdd.cache.CacheConfig;
 import com.hpst.tdd.repository.CarRepository;
 import com.hpst.tdd.service.CarService;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration
-@AutoConfigureCache
-public class CarServiceCacheTest {
+@DirtiesContext
+@ContextConfiguration(loader = AnnotationConfigContextLoader.class)
+public class CarServiceCacheTest{
 	
-		@InjectMocks
+		
+	
+		@Autowired
 		CarService carService;
-
-		@MockBean
+ 
+		
+		@Autowired
 		CarRepository carRepository;
+		
+		 @Configuration
+		 @Import(CacheConfig.class)
+		    static class SpringConfig{
+		        @Bean
+		        public CarService customerService(){
+		            return new CarService(customerRepository());
+		        }
+		        @Bean
+		        public CarRepository customerRepository(){
+		            return Mockito.mock(CarRepository.class);
+		        }
+		    }
+
 		
 		@BeforeEach
 		public void init() throws Exception {
@@ -36,19 +58,17 @@ public class CarServiceCacheTest {
 		
 		@Test
 		
-		public void test_carCache() {
+		public void test_carCache() throws Exception {
 			//arrange
 			given(carRepository.findByName(anyString()))
 			.willReturn(new Car(1,"farari","hybrid"));
 			//act
 			carService.getCarDetails("farari");
 			carService.getCarDetails("farari");
+		 
 			//assertion
 			verify(carRepository,times(1)).findByName("farari");
 			
 		}
 		
-		
-		  
-
 }
