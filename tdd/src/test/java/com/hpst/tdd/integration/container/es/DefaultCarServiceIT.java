@@ -19,37 +19,44 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import com.hpst.tdd.Car;
 import com.hpst.tdd.exception.DuplicateCarException;
-import com.hpst.tdd.service.CarService;
+import com.hpst.tdd.repository.es.CarEsService;
+
 
 @Testcontainers
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class DefaultCarServiceIT {
+
+    @Autowired
+    private CarEsService carEsService;
+
+    @Autowired
+    ElasticsearchTemplate template;
+
+    @Container
+    private static ElasticsearchContainer elasticsearchContainer = new CarElasticsearchContainer();
+
   
-  @Autowired
-  private CarService CarService;
-
-  @Autowired
-  ElasticsearchTemplate template;
-
-  @Container
-  private static ElasticsearchContainer elasticsearchContainer = new CarElasticsearchContainer();
-
   @BeforeAll
   static void setUp() {
+	  System.out.println("@@@@@@@@@@@@@@@@@@@@@@Starting Container@@@@@@@@@@@@@@@@@@@@@");
       elasticsearchContainer.start();
+      System.out.println("@@@@@@@@@@@@@@@@@@@@@@Started Container@@@@@@@@@@@@@@@@@@@@@");
   }
 
   @BeforeEach
   void testIsContainerRunning() {
-      assertTrue(elasticsearchContainer.isRunning());
-      recreateIndex();
+	  System.out.println("@@@@@@@@@@@@@@@@@@@@@@isRunning Container@@@@@@@@@@@@@@@@@@@@@");
+	  assertTrue(elasticsearchContainer.isRunning());
+	  System.out.println("@@@@@@@@@@@@@@@@@@@@@@Running Container@@@@@@@@@@@@@@@@@@@@@");
+	  recreateIndex();
   }
 
 
   @Test
   void testCreateCar() throws DuplicateCarException {
-      Car createdCar = CarService.create(createCar(1, "farari", "hybrid"));
+	  System.out.println("@@@@@@@@@@@@@@@@@@@@@@testCreateCar Container@@@@@@@@@@@@@@@@@@@@@");
+      Car createdCar = carEsService.create(createCar(15, "farari", "hybrid"));
       assertNotNull(createdCar);
       assertNotNull(createdCar.getId());
       assertEquals("farari", createdCar.getName());
@@ -78,3 +85,4 @@ class DefaultCarServiceIT {
       elasticsearchContainer.stop();
   }
 }
+

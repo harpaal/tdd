@@ -11,7 +11,7 @@ import org.testcontainers.elasticsearch.ElasticsearchContainer;
  */
 public class CarElasticsearchContainer extends ElasticsearchContainer {
  
-	 	private static final String ELASTIC_SEARCH_DOCKER = "elasticsearch:6.4.3";
+	 	private static final String ELASTIC_SEARCH_DOCKER = "docker.elastic.co/elasticsearch/elasticsearch:6.4.3";
 
 	    private static final String CLUSTER_NAME = "cluster.name";
 

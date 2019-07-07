@@ -14,22 +14,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
 import com.hpst.tdd.cache.CacheConfig;
 import com.hpst.tdd.repository.CarRepository;
 import com.hpst.tdd.service.CarService;
 
 @ExtendWith(SpringExtension.class)
-@DirtiesContext
-@ContextConfiguration(loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration
 public class CarServiceCacheTest{
 	
 		
-	
 		@Autowired
 		CarService carService;
  

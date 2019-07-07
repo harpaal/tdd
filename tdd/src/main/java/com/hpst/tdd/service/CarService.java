@@ -5,30 +5,31 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.hpst.tdd.Car;
-import com.hpst.tdd.exception.DuplicateCarException;
 import com.hpst.tdd.repository.CarRepository;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
+@Data
+@AllArgsConstructor
 public class CarService {
 
 	@Autowired
 	CarRepository carRepository;
 	
-//	@Autowired
-//	CarElasticSearchRepository carEsRepository;
 	
-	@Cacheable("cars")
+	@Cacheable(cacheManager = "commonCacheManager",cacheNames = "car" ,key = "{#root.args[0]}")
 	public Car getCarDetails(String name) {
 		log.info("<--------@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@---Getting "+name + "  details from DataBase---------->");
-		return carRepository.findByName(name);
+
+		Car car =carRepository.findByName(name);
+		log.info("<--------@@@@@@@@@@@@@@@@@@@@@@@@@@@@------>"+car);
+		return car;
 	}
 
-	public Car create(Car car) throws DuplicateCarException{
-		//return carEsRepository.save(car);
-		return null;
-	}
+	
 
 }

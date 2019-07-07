@@ -39,7 +39,14 @@ public class BatchConfiguration {
     FlatFileItemReader<Car> flatFileItemReader(@Value("${file}") File file) {
         FlatFileItemReader<Car> reader = new FlatFileItemReader<>();
         reader.setResource(new FileSystemResource(file));
-        reader.setLineMapper(new DefaultLineMapper<Car>() {
+        reader.setLineMapper(lineMapper());
+        reader.setLinesToSkip(1); 
+        return reader;
+    }
+
+	private DefaultLineMapper<Car> lineMapper() {
+		
+		return new DefaultLineMapper<Car>() {
             {
                 this.setLineTokenizer(new DelimitedLineTokenizer(",") {
                     {
@@ -52,20 +59,20 @@ public class BatchConfiguration {
                     }
                 });
             }
-        });
-        reader.setLinesToSkip(1);
-        return reader;
-    }
+        };
+	}
 
     @Bean
     JdbcBatchItemWriter<Car> jdbcBatchItemWriter(DataSource h2) {
-        JdbcBatchItemWriter<Car> w = new JdbcBatchItemWriter<>();
-        w.setDataSource(h2);
-        w.setSql("insert into Car( id, name, type) values ( :id, :name, :type )");
-        w.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>());
-        return w;
+        JdbcBatchItemWriter<Car> jdbcWriter = new JdbcBatchItemWriter<>();
+        jdbcWriter.setDataSource(h2);
+        jdbcWriter.setSql("insert into Car( id, name, type) values (:id,:name,:type)");
+        jdbcWriter.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>());
+        return jdbcWriter;
     }
 
+    
+    
     @Bean
     Job CarEtl(JobBuilderFactory jobBuilderFactory,
             StepBuilderFactory stepBuilderFactory,
@@ -79,7 +86,7 @@ public class BatchConfiguration {
                 .writer(writer)
                 .build();
 
-        return jobBuilderFactory.get("etl")
+        return jobBuilderFactory.get("caretl")
                 .start(step)
                 .build();
     }

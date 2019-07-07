@@ -3,17 +3,17 @@ package com.hpst.tdd;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 
 import com.hpst.tdd.repository.CarRepository;
+import com.hpst.tdd.repository.es.CarEsService;
+import com.hpst.tdd.service.CarService;
 
 /**
  * @author harpal singh
@@ -25,6 +25,7 @@ import com.hpst.tdd.repository.CarRepository;
  */
 @SpringBootApplication
 @EnableCaching
+
 public class Application {
 
 	public static void main(String[] args) {
@@ -32,9 +33,14 @@ public class Application {
 	}
 	
 	@Bean
-	CommandLineRunner dummyCLR(CarRepository carRepository) {
+	CommandLineRunner dummyCLR(CarRepository carRepository , CarService carService, CarEsService carEsService) {
 		return args -> {
 			addCars(carRepository);
+			System.out.println("1111111111111111111111111111");
+			carService.getCarDetails("farari");
+			carService.getCarDetails("farari");
+			System.out.println("1111111111111111111111111111");
+			carEsService.create(new Car(11,"farari1","hybrid1"));
 			carRepository.findAll().forEach(System.out::println);
 		};
 	}
